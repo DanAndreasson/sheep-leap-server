@@ -1,5 +1,8 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h2 Top #{highscores.length} highscores
+  for highscore in highscores
+    div.highscore #{highscore.name} got #{highscore.score}
+  else
+    h1 Sorry, no highscores!

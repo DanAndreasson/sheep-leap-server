@@ -24,7 +24,6 @@ exports.getOrCreateUserByFacebookID = function (req, res) {
     var user_id = 32;
     var score = -1;
     db.fetchOrCreateUserByFacebookID(name, facebook_id, function(err, result){
-        console.log(result);
         user_id = result.id;
         if (result.score != undefined)
             score = result.score;

@@ -19,6 +19,10 @@ exports.admin = function (req, res) {
 };
 
 exports.newHighScore = function (req, res) {
+    console.log("QUERY: ");
+    console.log(req.query);
+    console.log("WHOLE REQUEST: ");
+    console.log(req);
     var user_id = req.query.user_id;
     var score = req.query.score;
     db.insertHighScore(user_id, score, function (err, result) {

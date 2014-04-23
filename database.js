@@ -68,7 +68,7 @@ exports.insertUser = function(name, facebook_id, google_id, callback){
     });
 };
 
-exports.fetchCurrentHighscore = function(facebook_id, callback){
+exports.fetchCurrentHighscore = function(callback){
     pg.connect(conString, function(err, client, done) {
         if(err) {
             return console.error('error fetching client from pool', err);

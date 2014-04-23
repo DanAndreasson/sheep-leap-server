@@ -28,6 +28,7 @@ exports.newHighScore = function (req, res) {
 };
 
 exports.newUser = function (req, res) {
+    console.log(req);
     var name = req.query.name;
     var facebook_id = req.query.facebook_id;
     var google_id = -1;

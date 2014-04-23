@@ -18,6 +18,16 @@ exports.admin = function (req, res) {
     res.render('admin', { title: 'Express' });
 };
 
+exports.getOrCreateUserByFacebookID = function (req, res) {
+    var facebook_id = req.query.facebookID;
+    var name = req.query.name;
+    db.fetchOrCreateUserByFacebookID(name, facebook_id, function(err, result){
+
+        res.json({"success": result.rowCount==1});
+    });
+
+};
+
 exports.newHighScore = function (req, res) {
     console.log("QUERY: ");
     console.log(req.query);

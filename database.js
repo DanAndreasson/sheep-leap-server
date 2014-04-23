@@ -17,23 +17,31 @@ exports.fetchOrCreateUserByFacebookID = function(name, facebook_id, callback){
             if(err) {
                 return console.error('error running query', err);
             }
-
-            fetchUserData(facebook_id, callback);
+            var newlyCreated = result.rows.length == 0;
+            fetchUserData(facebook_id, newlyCreated, callback);
             return null;
         });
         return null;
     });
 };
 var fetchUserData;
-exports.fetchUserData = fetchUserData = function(facebook_id,callback){
+exports.fetchUserData = fetchUserData = function(facebook_id, newlycreated, callback){
     pg.connect(conString, function(err, client, done) {
         if(err) {
             return console.error('error fetching client from pool', err);
         }
-        client.query('SELECT u.id, u.name, MAX(h.score) as score ' +
-            'FROM users u ' +
-            'LEFT JOIN highscores h ON h.user_id = u.id AND u.facebook_id = $1::text ' +
-            'GROUP BY u.id',[facebook_id],function(err, result) {
+        var query = 'SELECT u.id, u.name, MAX(h.score) as score ' +
+            'FROM users u, highscores h ' +
+            'WHERE h.user_id = u.id AND u.facebook_id = $1::text ' +
+            'GROUP BY u.id' ;
+
+        if (newlycreated){
+            query = 'SELECT u.id, u.name ' +
+                'FROM users u ' +
+                'WHERE u.facebook_id = $1::text';
+        }
+
+        client.query(query,[facebook_id],function(err, result) {
 
             //call `done()` to release the client back to the pool
             done();
@@ -41,6 +49,7 @@ exports.fetchUserData = fetchUserData = function(facebook_id,callback){
             if(err) {
                 return console.error('error running query', err);
             }
+            console.log(result);
             callback(err, result.rows[0]);
             return null;
         });

@@ -17,7 +17,31 @@ exports.fetchOrCreateUserByFacebookID = function(name, facebook_id, callback){
             if(err) {
                 return console.error('error running query', err);
             }
-            callback(err, result);
+
+            fetchUserData(facebook_id, callback);
+            return null;
+        });
+        return null;
+    });
+};
+var fetchUserData;
+exports.fetchUserData = fetchUserData = function(facebook_id,callback){
+    pg.connect(conString, function(err, client, done) {
+        if(err) {
+            return console.error('error fetching client from pool', err);
+        }
+        client.query('SELECT u.id, u.name, MAX(h.score) as score ' +
+            'FROM users u ' +
+            'LEFT JOIN highscores h ON h.user_id = u.id AND u.facebook_id = $1::text ' +
+            'GROUP BY u.id',[facebook_id],function(err, result) {
+
+            //call `done()` to release the client back to the pool
+            done();
+
+            if(err) {
+                return console.error('error running query', err);
+            }
+            callback(err, result.rows[0]);
             return null;
         });
         return null;
@@ -44,7 +68,7 @@ exports.insertUser = function(name, facebook_id, google_id, callback){
     });
 };
 
-exports.fetchCurrentHighscore = function(callback){
+exports.fetchCurrentHighscore = function(facebook_id, callback){
     pg.connect(conString, function(err, client, done) {
         if(err) {
             return console.error('error fetching client from pool', err);

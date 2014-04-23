@@ -22,18 +22,18 @@ exports.getOrCreateUserByFacebookID = function (req, res) {
     var facebook_id = req.query.facebookID;
     var name = req.query.name;
     var user_id = 32;
+    var score = -1;
     db.fetchOrCreateUserByFacebookID(name, facebook_id, function(err, result){
-
-        res.json({"success": result.rowCount==1, "userID": user_id});
+        console.log(result);
+        user_id = result.id;
+        if (result.score != undefined)
+            score = result.score;
+        res.json({"userID": user_id, "highestScore": score});
     });
 
 };
 
 exports.newHighScore = function (req, res) {
-    console.log("QUERY: ");
-    console.log(req.query);
-    console.log("WHOLE REQUEST: ");
-    console.log(req);
     var user_id = req.query.user_id;
     var score = req.query.score;
     db.insertHighScore(user_id, score, function (err, result) {

@@ -21,7 +21,7 @@ exports.admin = function (req, res) {
 exports.getOrCreateUserByFacebookID = function (req, res) {
     var facebook_id = req.query.facebookID;
     var name = req.query.name;
-    var user_id = -1;
+    var user_id = 32;
     db.fetchOrCreateUserByFacebookID(name, facebook_id, function(err, result){
 
         res.json({"success": result.rowCount==1, "userID": user_id});

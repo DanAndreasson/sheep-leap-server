@@ -32,10 +32,10 @@ exports.newHighScore = function (req, res) {
 };
 
 exports.newUser = function (req, res) {
-    console.log(req);
     var name = req.query.name;
-    var facebook_id = req.query.facebook_id;
+    var facebook_id = req.query.facebookid;
     var google_id = -1;
+    console.log("name: " + name + ". Facebook_ID: " + facebook_id);
     db.insertUser(name, facebook_id, google_id, function (err, result) {
         res.json({"success": !err});
     });

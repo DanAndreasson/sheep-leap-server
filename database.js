@@ -7,7 +7,7 @@ exports.insertUser = function(name, facebook_id, google_id, callback){
         if(err) {
             return console.error('error fetching client from pool', err);
         }
-        client.query('INSERT INTO users (name, facebook_id) VALUES ($1::text, $2::int)',[name, facebook_id] ,function(err, result) {
+        client.query('INSERT INTO users (name, facebook_id) VALUES ($1::text, $2::text)',[name, facebook_id] ,function(err, result) {
 
             //call `done()` to release the client back to the pool
             done();

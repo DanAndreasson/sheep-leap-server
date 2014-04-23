@@ -2,6 +2,28 @@ var pg = require('pg');
 var conString = "postgres://dan:loppan@web441.webfaction.com:5432/sheep_leap";
 
 
+exports.fetchOrCreateUserByFacebookID = function(name, facebook_id, callback){
+    pg.connect(conString, function(err, client, done) {
+        if(err) {
+            return console.error('error fetching client from pool', err);
+        }
+        client.query('INSERT INTO users (name, facebook_id) ' +
+            'SELECT  $1::text, $2::text ' +
+            'WHERE NOT EXISTS (SELECT facebook_id FROM users WHERE facebook_id = $2::text)',[name, facebook_id] ,function(err, result) {
+
+            //call `done()` to release the client back to the pool
+            done();
+
+            if(err) {
+                return console.error('error running query', err);
+            }
+            callback(err, result);
+            return null;
+        });
+        return null;
+    });
+};
+
 exports.insertUser = function(name, facebook_id, google_id, callback){
     pg.connect(conString, function(err, client, done) {
         if(err) {

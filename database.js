@@ -49,7 +49,6 @@ exports.fetchUserData = fetchUserData = function(facebook_id, newlycreated, call
             if(err) {
                 return console.error('error running query', err);
             }
-            console.log(result);
             callback(err, result.rows[0]);
             return null;
         });

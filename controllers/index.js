@@ -14,6 +14,17 @@ exports.index = function (req, res) {
 
 };
 
+exports.getHighscores = function(req, res){
+    var highscores = [];
+    var quan_highscores = req.query.quantity;
+    db.fetchHighScores(quan_highscores, function (err, result) {
+        if (!err) {
+            highscores = result.rows;
+        }
+        res.json({highscores: highscores });
+    });
+};
+
 exports.admin = function (req, res) {
     res.render('admin', { title: 'Express' });
 };
